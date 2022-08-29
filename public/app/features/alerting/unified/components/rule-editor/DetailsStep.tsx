@@ -95,7 +95,8 @@ export const DetailsStep = ({ initialFolder }: DetailsStepProps) => {
                     content={
                       <div>
                         Each folder has unique folder permission. When you store multiple rules in a folder, the folder
-                        access permissions get assigned to the rules.
+                        access permissions get assigned to the rules. Folders with &apos;/&apos; character are not
+                        allowed.
                       </div>
                     }
                   >
@@ -117,6 +118,7 @@ export const DetailsStep = ({ initialFolder }: DetailsStepProps) => {
                   enableCreateNew={contextSrv.hasPermission(AccessControlAction.FoldersCreate)}
                   enableReset={true}
                   filter={folderFilter}
+                  filterSlashes={true}
                 />
               )}
               name="folder"
@@ -165,7 +167,6 @@ const useRuleFolderFilter = (existingRuleForm: RuleForm | null) => {
         existingRuleForm &&
         hit.folderId === existingRuleForm.id &&
         contextSrv.hasAccessInMetadata(AccessControlAction.AlertingRuleUpdate, hit, rbacDisabledFallback);
-
       return canCreateRuleInFolder || canUpdateInCurrentFolder;
     },
     [existingRuleForm]

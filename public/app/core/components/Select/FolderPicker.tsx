@@ -28,6 +28,7 @@ export interface Props {
   showRoot?: boolean;
   onClear?: () => void;
   accessControlMetadata?: boolean;
+  filterSlashes?: boolean;
   /**
    * Skips loading all folders in order to find the folder matching
    * the folder where the dashboard is stored.
@@ -99,10 +100,11 @@ export class FolderPicker extends PureComponent<Props, State> {
       accessControlMetadata,
       initialFolderId,
       showRoot,
+      filterSlashes,
     } = this.props;
 
     const searchHits = await searchFolders(query, permissionLevel, accessControlMetadata);
-    const options: Array<SelectableValue<number>> = mapSearchHitsToOptions(searchHits, filter);
+    const options: Array<SelectableValue<number>> = mapSearchHitsToOptions(searchHits, Boolean(filterSlashes), filter);
 
     const hasAccess =
       contextSrv.hasAccess(AccessControlAction.DashboardsWrite, contextSrv.isEditor) ||
@@ -234,9 +236,15 @@ export class FolderPicker extends PureComponent<Props, State> {
   }
 }
 
-function mapSearchHitsToOptions(hits: DashboardSearchHit[], filter?: FolderPickerFilter) {
+function mapSearchHitsToOptions(hits: DashboardSearchHit[], filterSlashes: boolean, filter?: FolderPickerFilter) {
   const filteredHits = filter ? filter(hits) : hits;
-  return filteredHits.map((hit) => ({ label: hit.title, value: hit.id }));
+  if (filterSlashes) {
+    return filteredHits
+      .filter((value: DashboardSearchHit) => value.title?.indexOf('/') === -1)
+      .map((hit) => ({ label: hit.title, value: hit.id }));
+  } else {
+    return filteredHits.map((hit) => ({ label: hit.title, value: hit.id }));
+  }
 }
 
 interface Args {
