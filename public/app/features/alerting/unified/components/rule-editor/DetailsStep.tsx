@@ -87,23 +87,25 @@ export const DetailsStep = ({ initialFolder }: DetailsStepProps) => {
         <div className={classNames([styles.flexRow, styles.alignBaseline])}>
           <Field
             label={
-              <Label htmlFor="folder" description={'Select a folder to store your rule.'}>
-                <Stack gap={0.5}>
-                  Folder
-                  <Tooltip
-                    placement="top"
-                    content={
-                      <div>
-                        Each folder has unique folder permission. When you store multiple rules in a folder, the folder
-                        access permissions get assigned to the rules. Folders with &apos;/&apos; character are not
-                        allowed.
-                      </div>
-                    }
-                  >
-                    <Icon name="info-circle" size="xs" />
-                  </Tooltip>
-                </Stack>
-              </Label>
+              <>
+                <Label htmlFor="folder" description={'Select a folder to store your rule.'}>
+                  <Stack gap={0.5}>
+                    Folder
+                    <Tooltip
+                      placement="top"
+                      content={
+                        <div>
+                          Each folder has unique folder permission. When you store multiple rules in a folder, the
+                          folder access permissions get assigned to the rules.
+                        </div>
+                      }
+                    >
+                      <Icon name="info-circle" size="xs" />
+                    </Tooltip>
+                  </Stack>
+                </Label>
+                <div className={styles.slashNotAllowed}>Folders with &apos;/&apos; character are not allowed.</div>
+              </>
             }
             className={styles.formInput}
             error={errors.folder?.message}
@@ -194,6 +196,10 @@ const getStyles = (theme: GrafanaTheme2) => ({
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    align-items: flex-end;
+    align-items: end;
+  `,
+  slashNotAllowed: css`
+    color: ${theme.colors.warning.main};
+    font-size: 12px;
   `,
 });
